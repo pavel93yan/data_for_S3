@@ -1,7 +1,7 @@
 """
 Module for providing configs to application
 """
-from utils.file_manager import FileManager
+from utils.file_reader import FileManager
 
 
 class ConfigManager(FileManager):

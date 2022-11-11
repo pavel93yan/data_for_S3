@@ -17,7 +17,7 @@ class Logger(metaclass=Singleton):
     __config: dict = ConfigManager().get_logger_config()
     __log_flag: str = ConfigManager().get_main_config()['log_file']
 
-    def logger(self):
+    def get_logger(self):
         """
         Method is for configuring and getting logger
         :return: Instance of logger.

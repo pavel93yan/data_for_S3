@@ -1,12 +1,12 @@
 """
-Module for managing various data files.
+Module for reading various data files.
 """
 import json
 
 
 class FileManager:
     """
-    Class FileManager for managing various data files.
+    Class FileReader for reading various data files.
     """
     @staticmethod
     def get_data_from_json(path: str) -> dict:
