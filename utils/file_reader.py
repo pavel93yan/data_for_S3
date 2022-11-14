@@ -15,6 +15,7 @@ class FileManager:
         :param path: input file path
         :type path: String
         :return: data from json file as dict
+        :rtype: dict
         """
         with open(path, encoding='utf-8') as data_file:
             data: dict = json.load(data_file)

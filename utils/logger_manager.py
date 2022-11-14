@@ -17,10 +17,11 @@ class Logger(metaclass=Singleton):
     __config: dict = ConfigManager().get_logger_config()
     __log_flag: str = ConfigManager().get_main_config()['log_file']
 
-    def get_logger(self):
+    def get_logger(self) -> logging.Logger:
         """
         Method is for configuring and getting logger
         :return: Instance of logger.
+        :rtype: logging.Logger
         """
 
         if self.__logger is None:
