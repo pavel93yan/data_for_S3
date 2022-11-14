@@ -47,6 +47,7 @@ class FileNameManager:
         """
         Method generate_json_metadata_file generates json metadata file name
         :param datetime: datetime of files ingestion to S3
+        :type datetime: str
         :return: name of the metadata file
         :rtype: str
         """
@@ -70,12 +71,13 @@ class FileNameManager:
             if s3:
                 return path
             else:
-                return os.path.normcase(path)
+                return os.path.normpath(path)
 
         if type(names) == list:
             for i in range(len(names)):
                 if s3:
                     names[i]: str = prefix + names[i]
                 else:
-                    names[i]: str = os.path.normcase(prefix + names[i])
+                    names[i]: str = os.path.normpath(os.path.join(prefix, names[i]))
+        names.sort()
         return names
