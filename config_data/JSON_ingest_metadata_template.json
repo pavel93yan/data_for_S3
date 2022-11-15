@@ -1,0 +1,14 @@
+{
+    "file_type": "csv",
+    "csv_config": {
+      "delimiter": ",",
+      "text_qualifier": "\""
+    },
+    "row_count": 1,
+    "load_to": [
+      "snowflake"
+    ],
+    "data_config": {
+      "must_have_rows": "false"
+    }
+  }

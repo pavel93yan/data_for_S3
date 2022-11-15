@@ -4,6 +4,7 @@ config_data/main_config.json contains 'delete_flag', if it's set to 'True' then 
 will be deleted without moving to 'dir_to_move' directory where raw files are moved by default.
 
 It's allowed to set paths to files and directories for Windows OS with the forward slash ('/').
+Add all prefixes and folder names to config files only ended with forward slash '/'.
 """
 
 from utils.config_manager import ConfigReader
@@ -51,11 +52,11 @@ class MainScript:
         raw_data_dir: str = configs["raw_data_dir"]
         raw_data_file_names_list_src: list[str] = FileManager.get_list_of_raw_data_files(raw_data_dir, file_type)
         raw_data_file_paths_list_src: list[str] = FileNameManager\
-            .generate_path_to_files(raw_data_dir, raw_data_file_names_list_src)
+            .generate_path_to_files(raw_data_dir, raw_data_file_names_list_src.copy())
         ingest_raw_data_file_names_list: list[str] = FileNameManager\
-            .generate_data_file_names(len(raw_data_file_paths_list_src), timestamp_mark)
+            .generate_data_file_names(len(raw_data_file_paths_list_src.copy()), timestamp_mark)
         ingest_raw_data_file_paths_list = FileNameManager\
-            .generate_path_to_files(raw_data_dir, ingest_raw_data_file_names_list)
+            .generate_path_to_files(raw_data_dir, ingest_raw_data_file_names_list.copy())
         FileManager.rename_multiple_files(raw_data_file_paths_list_src, ingest_raw_data_file_paths_list)
         # end of naming management of raw data files
 
@@ -75,11 +76,11 @@ class MainScript:
         # end of naming management and creating of ingest metadata file
 
         # start of naming management of S3 objects
-        configs["s3_raw_obj_prefix"] = os.path.join(configs["s3_raw_obj_prefix"], f"time={timestamp_mark}")
+        configs["s3_raw_obj_prefix"] = configs["s3_raw_obj_prefix"] + f"time={timestamp_mark}/"
         s3_raw_data_object_names_list: list[str] = FileNameManager\
-            .generate_path_to_files(configs["s3_raw_obj_prefix"], ingest_raw_data_file_names_list)
+            .generate_path_to_files(configs["s3_raw_obj_prefix"], ingest_raw_data_file_names_list.copy(), s3=True)
         s3_json_metadata_object_name: str = FileNameManager\
-            .generate_path_to_files(configs["s3_metadata_obj_prefix"], json_ingest_metadata_file_name)
+            .generate_path_to_files(configs["s3_metadata_obj_prefix"], json_ingest_metadata_file_name, s3=True)
         # end of naming management of S3 objects
 
         # start of uploading files to AWS S3 buckets
@@ -100,15 +101,19 @@ class MainScript:
         # start of managing files data and metadata files on local machine
         data_files_list: list[str] = ingest_raw_data_file_paths_list.copy()
         data_files_list.append(json_ingest_metadata_file_path_src)
+        Logger().get_logger().error(data_files_list)
         if configs["delete_flag"] == "True":
             FileManager.remove_multiple_files(data_files_list)
         else:
             new_folder_to_move_files: str = FileManager.create_folder(configs["dir_to_move"], timestamp_mark)
             FileManager.move_files_to_folder(data_files_list, new_folder_to_move_files)
         # end of managing files data and metadata files on local machine
-        Logger().get_logger().info(f"End of process of ingesting data to S3")
+        Logger().get_logger().info("End of process of ingesting data to S3")
 
 
 if __name__ == '__main__':
-    MainScript.run_main_script()
-
+    try:
+        MainScript.run_main_script()
+    except Exception as e:
+        Logger().get_logger().error(f"Process of ingesting data to S3 failed with the next error: {e}")
+        raise Exception

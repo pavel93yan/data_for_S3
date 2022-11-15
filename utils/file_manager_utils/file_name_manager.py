@@ -66,7 +66,7 @@ class FileNameManager:
         :return: path or paths to files
         :rtype: list[str] or str
         """
-        if type(names) == str and s3:
+        if type(names) == str:
             path: str = prefix + names
             if s3:
                 return path

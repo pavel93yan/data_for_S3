@@ -5,6 +5,7 @@ import logging
 from utils.singleton_util import Singleton
 from utils.config_manager import ConfigReader
 from typing import Optional
+import os
 
 
 class Logger(metaclass=Singleton):
@@ -23,6 +24,10 @@ class Logger(metaclass=Singleton):
         :return: Instance of logger.
         :rtype: logging.Logger
         """
+        log_directory: str = os.path.normpath(self.__config['log_dir'])
+        log_path: str = os.path.join(log_directory, self.__config['log_file'])
+        if not os.path.exists(log_directory):
+            os.mkdir(log_directory)
 
         if self.__logger is None:
             self.__logger = logging.getLogger(Logger.__name__)
@@ -32,7 +37,7 @@ class Logger(metaclass=Singleton):
             ch.setFormatter(formatter)
             self.__logger.addHandler(ch)
             if self.__log_flag == "True":
-                fh = logging.FileHandler(self.__config['path'], mode=self.__config['mode'])
+                fh = logging.FileHandler(log_path, mode=self.__config['mode'])
                 fh.setFormatter(formatter)
                 self.__logger.addHandler(fh)
         return self.__logger

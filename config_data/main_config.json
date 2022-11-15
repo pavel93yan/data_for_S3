@@ -1,0 +1,20 @@
+{
+  "log_file": "True",
+   "WaiterConfig": {
+        "Delay": 123,
+        "MaxAttempts": 123
+    },
+  "time_format": "%Y%m%d%H%M%S",
+  "data_files_name_pattern": {
+     "source_name": "elma",
+     "table_name": "table1",
+     "file_type": "csv"
+  },
+  "s3_raw_bucket": "dev-externalsource-elmakz-raw",
+  "s3_raw_obj_prefix": "v1/elma/table1/",
+  "s3_metadata_bucket": "dev-externalsource-elmakz-metadata",
+  "s3_metadata_obj_prefix": "ingest/v1/elma/table1/",
+  "raw_data_dir": "D:/test_folder_1/",
+  "dir_to_move": "D:/test_folder_2/",
+  "delete_flag": "False"
+}

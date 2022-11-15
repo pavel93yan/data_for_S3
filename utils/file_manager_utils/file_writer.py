@@ -19,7 +19,7 @@ class FileWriter:
         :param path: path where file will be saved
         :return: Nothing
         """
-        Logger().get_logger().info(f"Creating json metadata file with path '{path} and next metadata'")
+        Logger().get_logger().info(f"Creating json metadata file with path '{path}' and next metadata - {metadata}")
         if len(metadata) == 0:
             raise ValueError
 

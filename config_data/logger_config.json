@@ -1,0 +1,7 @@
+{
+  "log_dir": "D:/data_for_S3/logs",
+  "log_file": "S3_upload_log.log",
+  "level": 10,
+  "mode": "a",
+  "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+}
