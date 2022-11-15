@@ -3,7 +3,7 @@ Module for needs of file uploading to S3
 """
 from boto3_type_annotations.s3 import Client
 from botocore.exceptions import ClientError, ParamValidationError
-from utils.aws_waiter_manager import WaiterManager
+from utils.aws_utils.aws_waiter_manager import WaiterManager
 from utils.logger_manager import Logger
 
 
@@ -51,7 +51,7 @@ class S3Uploader:
         :type object_name: str
         :return: doesn't return anything
         """
-        S3Uploader.upload_file_to_s3_bucket(s3_client,  file_name, bucket, object_name)
+        S3Uploader.upload_file_to_s3_bucket(s3_client, file_name, bucket, object_name)
         WaiterManager.wait_for_object_exists_in_S3(s3_client, bucket, object_name)
 
     @staticmethod

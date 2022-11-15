@@ -1,10 +1,10 @@
 """
 Module for providing configs to application
 """
-from utils.file_reader import FileManager
+from utils.file_manager_utils.file_reader import FileReader
 
 
-class ConfigManager(FileManager):
+class ConfigReader(FileReader):
     """
     ConfigManager class for getting configs for different applications modules
     """
@@ -17,7 +17,7 @@ class ConfigManager(FileManager):
         get_main_config - method for getting main configs
         :return: main configs as dict
         """
-        return ConfigManager.get_data_from_json(ConfigManager.__main_config_path)
+        return ConfigReader.get_data_from_json(ConfigReader.__main_config_path)
 
     @staticmethod
     def get_logger_config() -> dict:
@@ -25,4 +25,4 @@ class ConfigManager(FileManager):
         get_logger_config - method for getting logger configs
         :return: logger configs as dict
         """
-        return ConfigManager.get_data_from_json(ConfigManager.__logger_config_path)
+        return ConfigReader.get_data_from_json(ConfigReader.__logger_config_path)

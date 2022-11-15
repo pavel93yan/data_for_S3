@@ -4,7 +4,7 @@ Module for reading various data files.
 import json
 
 
-class FileManager:
+class FileReader:
     """
     Class FileReader for reading various data files.
     """

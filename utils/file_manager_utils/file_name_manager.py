@@ -2,7 +2,7 @@
 Module for managing file names purposes
 """
 from typing import Union
-from utils.config_manager import ConfigManager
+from utils.config_manager import ConfigReader
 import os
 
 
@@ -21,7 +21,7 @@ class FileNameManager:
         :return: file name
         :rtype: str
         """
-        naming_pattern: dict = ConfigManager.get_main_config()['data_files_name_pattern']
+        naming_pattern: dict = ConfigReader.get_main_config()['data_files_name_pattern']
         return f"{naming_pattern['source_name']}_{naming_pattern['table_name']}{order_num}_{datetime}.{file_type}"
 
     @staticmethod
@@ -35,7 +35,7 @@ class FileNameManager:
         :return: list of names of csv files
         :rtype: list[str]
         """
-        file_type: str = ConfigManager.get_main_config()['data_files_name_pattern']['file_type']
+        file_type: str = ConfigReader.get_main_config()['data_files_name_pattern']['file_type']
         name_list: list = []
         for i in range(file_num):
             order_num: str = "_" + str(i + 1).zfill(3)
@@ -43,9 +43,9 @@ class FileNameManager:
         return name_list
 
     @staticmethod
-    def generate_json_metadata_file(datetime: str) -> str:
+    def generate_json_metadata_file_name(datetime: str) -> str:
         """
-        Method generate_json_metadata_file generates json metadata file name
+        Method generate_json_metadata_file_name generates json metadata file name
         :param datetime: datetime of files ingestion to S3
         :type datetime: str
         :return: name of the metadata file
@@ -54,9 +54,9 @@ class FileNameManager:
         return FileNameManager.__generate_basic_file_name("json", datetime)
 
     @staticmethod
-    def generate_path_to_file(prefix: str, names: Union[list[str], str], s3: bool = False) -> Union[list[str], str]:
+    def generate_path_to_files(prefix: str, names: Union[list[str], str], s3: bool = False) -> Union[list[str], str]:
         """
-         Method generate_path_to_file can generate different paths to file. It combines given prefix with file or files
+         Method generate_path_to_files can generate different paths to file. It combines given prefix with file or files
         name. Add prefix only ended with '/'.
         :param prefix: path to file directory
         :type prefix: str

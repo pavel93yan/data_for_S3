@@ -24,7 +24,8 @@ class FileManager:
         """
         Logger().get_logger().info(f"Renaming the following list of the files '{old_names_list}'"
                                    f" to new names that are given in the next list '{new_names_list}'")
-        FileManager.files_exist(old_names_list)
+        if not FileManager.all_files_exist(old_names_list):
+            raise FileNotFoundError
         for old_name, new_name in zip(old_names_list, new_names_list):
             os.rename(
                 os.path.normpath(old_name),
@@ -40,27 +41,31 @@ class FileManager:
         :return: Nothing
         """
         Logger().get_logger().info(f"Removing the following list of the files '{file_name_list}'")
-        FileManager.files_exist(file_name_list)
+        if not FileManager.all_files_exist(file_name_list):
+            raise FileNotFoundError
         for file_name in file_name_list:
             os.remove(os.path.normpath(file_name))
 
     @staticmethod
-    def files_exist(files_path_list: list[str]):
+    def all_files_exist(files_path_list: list[str]) -> bool:
         """
-        files_exist method checks that files by the given paths exist
+        all_files_exist method checks that files by the given paths exist
         :param files_path_list: list of paths to the files
         :type files_path_list: list[str]
-        :exception FileNotFoundError: if one of the files are not found
+        :return: False if any of the files is not found. If all files exist = returns True
+        :rtype: bool
         """
         not_exist_list: list[str] = []
         for file_path in files_path_list:
             path = os.path.normpath(file_path)
             if not os.path.isfile(path):
                 not_exist_list.append(path)
-        if len(not_exist_list) > 0:
+        if len(not_exist_list) == 0:
+            return True
+        else:
             Logger().get_logger()\
                 .error(f"FileNotFoundError. The files numbered in the next list '{not_exist_list}' don't exist. ")
-            raise FileNotFoundError
+            return False
 
     @staticmethod
     def move_files_to_folder(old_files_list: list[str], dest_folder: str):
@@ -73,7 +78,8 @@ class FileManager:
         :return: Nothing
         """
         Logger().get_logger().info(f"Moving files from list '{old_files_list} to destination folder '{dest_folder}'")
-        FileManager.files_exist(old_files_list)
+        if not FileManager.all_files_exist(old_files_list):
+            raise FileNotFoundError
         dest_folder: str = os.path.normpath(dest_folder)
         if os.path.isdir(dest_folder):
             for src_path in old_files_list:
@@ -84,19 +90,49 @@ class FileManager:
             raise NotADirectoryError
 
     @staticmethod
-    def create_folder(path_prefix: str, folder_name: str):
+    def create_folder(path_prefix: str, folder_name: str) -> str:
         """
         create_folder method creates new folder inside another folder
         :param path_prefix: main path where new folder will be created
         :type path_prefix: str
         :param folder_name: name of the new folder
         :type folder_name: str
-        :return: Nothing
+        :return: new folder path
+        :rtype: str
         """
         Logger().get_logger().info(f"Creating new folder'{folder_name} in main directory '{path_prefix}'")
         path_prefix: str = os.path.normpath(path_prefix)
         if os.path.isdir(path_prefix):
-            os.makedirs(os.path.join(path_prefix, folder_name))
+            new_folder_path: str = os.path.join(path_prefix, folder_name)
+            os.makedirs(new_folder_path)
+            return new_folder_path
         else:
             Logger().get_logger().error(f"Main directory (path_prefix) '{path_prefix}' doesn't exist")
             raise NotADirectoryError
+
+    @staticmethod
+    def get_list_of_raw_data_files(directory: str, file_type: str) -> list[str]:
+        """
+        get_list_of_raw_data_files method helps to get list of files with required extension in required directory
+        :param directory: path to directory form which raw file names will be obtained
+        :type directory: str
+        :param file_type: extension of required files. Provided for purposes of avoiding of reading non-required files
+        :type file_type: str
+        :return:  list of files with file_type extension
+        :rtype: list[str]
+        """
+        directory: str = os.path.normpath(directory)
+        if os.path.isdir(directory):
+            content_list: list[str] = os.listdir(directory)
+        else:
+            Logger().get_logger().error(f"Directory (path_prefix) '{directory}' doesn't exist")
+            raise NotADirectoryError
+        files_list: list[str] = []
+        for item in content_list:
+            if item.endswith("." + file_type):
+                files_list.append(item)
+        if len(files_list) > 0:
+            return files_list
+        else:
+            Logger().get_logger().error(f"There are no files with extensiom '.{file_type}' in folder '{directory}'")
+            raise ValueError

@@ -1,6 +1,7 @@
 """
 Module for reading datasets
 """
+import os.path
 from utils.logger_manager import Logger
 import pandas as pd
 from typing import Optional
@@ -22,7 +23,8 @@ class DatasetReader:
         :return:
         """
         Logger().get_logger().info(f"Reading dataset from csv file '{path}'")
-        df_chunk: Optional[pd.TextFileReader, pd.DataFrame] = pd.read_csv(path, chunksize=chunksize)
+
+        df_chunk: Optional[pd.TextFileReader, pd.DataFrame] = pd.read_csv(os.path.normpath(path), chunksize=chunksize)
         if chunksize is None:
             return df_chunk
         else:

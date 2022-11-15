@@ -3,7 +3,7 @@ Module of logger_util. Class Logger is represented in this module.
 """
 import logging
 from utils.singleton_util import Singleton
-from utils.config_manager import ConfigManager
+from utils.config_manager import ConfigReader
 from typing import Optional
 
 
@@ -14,8 +14,8 @@ class Logger(metaclass=Singleton):
     Methods: logger. This method returns instance of logger.
     """
     __logger: Optional[logging.Logger] = None
-    __config: dict = ConfigManager().get_logger_config()
-    __log_flag: str = ConfigManager().get_main_config()['log_file']
+    __config: dict = ConfigReader().get_logger_config()
+    __log_flag: str = ConfigReader().get_main_config()['log_file']
 
     def get_logger(self) -> logging.Logger:
         """
