@@ -17,6 +17,7 @@ from utils.time_manager import TimeManager
 from utils.logger_manager import Logger
 from utils.dataset_reader import DatasetReader
 from boto3_type_annotations.s3 import Client
+from dotenv import load_dotenv
 import boto3
 import os
 
@@ -31,6 +32,7 @@ class MainScript:
         main method which runs the whole script
         :return: Nothing
         """
+        load_dotenv(dotenv_path='config_data/AWS_creds.env')
         configs: dict = ConfigReader.get_main_config()
         timestamp_mark: str = TimeManager.get_current_datetime(configs["time_format"])
         Logger().get_logger().info(f"Starting process of ingesting data to S3 with timestamp '{timestamp_mark}'")
